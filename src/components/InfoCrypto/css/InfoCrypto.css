@@ -1,0 +1,107 @@
+#InfoCrypto {
+  background: linear-gradient(135deg, #fbbf24, #f87171);
+  color: #111827;
+  padding: 25px 30px;
+  border-radius: 15px;
+  width: 100%;
+  margin: 10px auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+.headerInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.headerInfo h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.headerInfo h1 span {
+  font-size: 1.2rem;
+  color: #ffffffdd;
+}
+
+.price {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.statBox {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 12px 18px;
+  border-radius: 12px;
+  min-width: 140px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.statBox span {
+  display: block;
+}
+
+.statBox span:first-child {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #fefefe;
+}
+
+.statBox .value {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+.statBox .positive {
+  color: limegreen;
+}
+
+.statBox .negative {
+  color: crimson;
+}
+
+.crypto-description {
+  background-color: #fef3c7;
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: #111827;
+}
+
+.crypto-description h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.crypto-description p {
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* responsividade */
+@media screen and (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

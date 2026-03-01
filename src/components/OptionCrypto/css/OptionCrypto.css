@@ -1,0 +1,57 @@
+#containerCarrosslCards {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25px;
+  width: 100%;
+  position: relative;
+  padding: 10px 0;
+}
+
+.btnSlides {
+  background-color: white;
+  border: 1px solid black;
+  height: 60px; 
+  width: 40px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  z-index: 5; 
+  position: absolute; 
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.btnSlides:first-of-type {
+  left: 10px;
+}
+.btnSlides:last-of-type {
+  right: 10px;
+}
+
+.btnSlides:hover {
+  background-color: rgb(243, 243, 243);
+}
+
+#carrosselCards {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.265);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 40px;
+  height: 120px;
+  width: 100%;
+  overflow-x: auto;
+  padding: 15px;
+  align-items: center;
+  scroll-behavior: smooth;
+
+  
+}
+#carrosselCards::-webkit-scrollbar {
+  display: none;
+}

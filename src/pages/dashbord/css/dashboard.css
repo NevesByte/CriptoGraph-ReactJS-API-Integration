@@ -1,0 +1,19 @@
+#containerGraphInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 45vh;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+
+
+@media screen and (min-width: 600px){
+    #containerGraphInfo{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        height: 65vh;
+    }
+}
