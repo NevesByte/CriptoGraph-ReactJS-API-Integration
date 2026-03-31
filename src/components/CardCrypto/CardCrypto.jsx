@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+﻿import { useContext, useState } from "react";
 import { CryptoContext } from "../../context/CryptoContext";
 import "./css/cardCrypto.css";
 
@@ -64,7 +64,7 @@ function CardCrypto() {
                   }}
                   aria-label={`Favoritar ${crypto.name}`}
                 >
-                  {isFavorite(crypto.id) ? "★" : "☆"}
+                  {isFavorite(crypto.id) ? "Favorito" : "Favoritar"}
                 </button>
               </div>
 

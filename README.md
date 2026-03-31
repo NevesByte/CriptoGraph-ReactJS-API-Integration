@@ -1,120 +1,174 @@
-# CriptoGraph
+﻿# CriptoGraph
 
-Aplicacao web para monitoramento de criptomoedas com foco em experiencia de uso, performance de consultas e qualidade de engenharia frontend.
-Acesse: https://vercel.com/nevesbytes-projects
+Dashboard de mercado cripto com foco em experiencia de produto, performance e engenharia frontend profissional.
 
-## Resumo
+![Coverage](https://img.shields.io/badge/coverage-61.8%25-yellow)
+![CI](https://img.shields.io/badge/CI-lint%20%7C%20coverage%20%7C%20build-blue)
 
-O projeto consome a API da CoinGecko para listar ativos, exibir indicadores de mercado e renderizar historico de preco em grafico.
+## O que foi implementado
 
-Esta versao inclui melhorias de engenharia importantes:
+Este projeto agora inclui todas as evolucoes pedidas:
 
-- seletor de periodo (`24h`, `7d`, `30d`, `1y`);
-- cache em memoria para historicos ja consultados;
-- busca por nome/simbolo com debounce;
-- testes automatizados com `Vitest` + `React Testing Library`;
-- pipeline de CI com `lint`, `build` e `test`.
+- alertas de preco por ativo;
+- favoritos/watchlist com persistencia em `localStorage`;
+- comparacao de ate 3 moedas no mesmo grafico;
+- metricas avancadas no grafico:
+  - media movel 7;
+  - media movel 21;
+  - volatilidade;
+  - max drawdown;
+- tema claro/escuro com persistencia;
+- paginacao server-side (`page` + `per_page`);
+- camada de dados com `React Query`;
+- tratamento robusto de erro com `retry` na UI;
+- melhorias de acessibilidade (labels, foco visivel, teclas de selecao, aria);
+- PWA instalavel (manifest + service worker);
+- testes com `Vitest + React Testing Library`;
+- cobertura de testes com gate de qualidade na CI.
 
 ## Stack Tecnica
 
 - `React 19`
 - `Vite 7`
+- `@tanstack/react-query`
 - `Recharts`
-- `Context API`
-- `Vitest`
-- `React Testing Library`
+- `Vitest` + `React Testing Library`
+- `@vitest/coverage-v8`
 - `ESLint 9`
+- `vite-plugin-pwa`
 - `GitHub Actions`
 
-## Funcionalidades
+## Funcionalidades de Produto
 
-- listagem de criptomoedas por market cap;
-- selecao de ativo para analise;
-- grafico de variacao de preco por periodo;
-- exibicao de preco atual, market cap, volume 24h e variacao diaria;
-- busca com debounce por nome ou simbolo;
-- cache local de historico por chave `coinId + periodo`.
+### Mercado e navegacao
+
+- busca por nome/simbolo com debounce;
+- filtro de periodo (`24h`, `7d`, `30d`, `1y`);
+- paginação de resultados com controle de itens por pagina;
+- filtro de somente favoritos.
+
+### Watchlist e alertas
+
+- favoritar/desfavoritar moedas;
+- definir alvo de preco por ativo;
+- painel de alertas acionados com dismiss;
+- contador de alertas no header.
+
+### Grafico analitico
+
+- grafico realista com area + glow + tooltip customizada;
+- linha principal da moeda selecionada;
+- linhas comparativas de outras moedas;
+- medias moveis 7 e 21;
+- indicador de tendencia (alta/queda);
+- volatilidade e max drawdown exibidos na UI.
 
 ## Arquitetura
 
-### Gerenciamento de estado
+### Estado global e dados
 
-O estado global fica em `CryptoContext`, concentrando:
+`CryptoContext` centraliza estado de dominio e interacao com queries:
 
-- lista de ativos;
-- ativo selecionado;
-- historico de preco;
-- periodo selecionado;
-- termo de busca;
-- estados de loading e erro;
-- cache em memoria (`Map`) para historicos.
+- selecao de ativo e periodo;
+- favoritos e comparacoes;
+- paginacao;
+- alertas;
+- tema;
+- estado de loading/erro/retry.
 
-### Fluxo de dados
+`React Query` gerencia:
 
-1. A aplicacao busca os ativos no mount.
-2. Define automaticamente o primeiro ativo como selecionado.
-3. Sempre que `selectedCrypto` ou `selectedPeriod` mudam, tenta carregar historico:
-   - se existir no cache, reutiliza;
-   - se nao existir, consulta API e grava no cache.
-4. A busca filtra a lista com debounce para reduzir re-renders e processamento.
+- cache em memoria de mercado e historicos;
+- stale time e retries;
+- deduplicacao de requests;
+- refetch controlado.
 
-## Estrutura de Pastas
-
-- `src/context/CryptoContext.jsx`: estado global e regra de negocio
-- `src/hooks/useDebouncedValue.js`: hook reutilizavel de debounce
-- `src/components/OptionCrypto/`: busca, periodo e navegacao horizontal
-- `src/components/CardCrypto/`: cards de ativos
-- `src/components/Graph/`: grafico historico
-- `src/components/InfoCrypto/`: indicadores do ativo
-- `src/context/__tests__/CryptoContext.test.jsx`: teste de cache/fluxo do contexto
-- `src/components/OptionCrypto/__tests__/OptionCrypto.test.jsx`: teste de interacao da UI
-- `.github/workflows/ci.yml`: pipeline CI
-
-## Endpoints Consumidos
+## Endpoints Consumidos (CoinGecko)
 
 Base URL: `https://api.coingecko.com`
 
 - Lista de ativos:
-  - `GET /api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false`
-- Historico por periodo:
+  - `GET /api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&sparkline=false&per_page={perPage}&page={page}`
+- Historico por ativo:
   - `GET /api/v3/coins/{id}/market_chart?vs_currency=usd&days={period}`
 
-## Qualidade e Testes
+## PWA
 
-### Suite de testes
+Configurado com `vite-plugin-pwa`:
 
-- `OptionCrypto.test.jsx`
-  - valida busca e troca de periodo
+- `manifest.webmanifest` gerado no build;
+- `service worker` gerado automaticamente;
+- app instalavel em navegadores compatíveis.
+
+## Testes e Cobertura
+
+Suites atuais:
+
 - `CryptoContext.test.jsx`
-  - valida uso do cache para evitar chamadas repetidas
+- `OptionCrypto.test.jsx`
+- `Graph.test.jsx`
+- `InfoCrypto.test.jsx`
 
-### Scripts
+Comando de cobertura:
+
+```bash
+npm run test:coverage
+```
+
+Thresholds globais (gate de qualidade):
+
+- `lines >= 60`
+- `statements >= 60`
+- `branches >= 55`
+- `functions >= 40`
+
+## CI
+
+Pipeline em `.github/workflows/ci.yml` executa em `push` e `pull_request`:
+
+1. `npm ci`
+2. `npm run lint`
+3. `npm run test:coverage`
+4. `npm run build`
+5. upload do artefato de cobertura
+
+## Scripts
 
 ```bash
 npm run dev
 npm run lint
-npm run build
 npm run test
 npm run test:watch
+npm run test:coverage
+npm run build
 npm run preview
+npm run quality
 ```
 
-## CI
-
-Pipeline configurada em `.github/workflows/ci.yml` para `push` e `pull_request`:
-
-1. checkout do repositorio;
-2. setup do Node;
-3. `npm ci`;
-4. `npm run lint`;
-5. `npm run build`;
-6. `npm run test`.
-
-## Como Executar Localmente
+## Executar localmente
 
 ```bash
 npm install
 npm run dev
 ```
 
-Aplicacao local: `http://localhost:5173`
+App local: `http://localhost:5173`
+
+## Estrutura relevante
+
+- `src/context/CryptoContext.jsx`
+- `src/hooks/useDebouncedValue.js`
+- `src/components/OptionCrypto/`
+- `src/components/CardCrypto/`
+- `src/components/Graph/`
+- `src/components/InfoCrypto/`
+- `src/components/Header/`
+- `src/pages/dashbord/`
+- `.github/workflows/ci.yml`
+- `vite.config.js`
+
+## Proximos passos recomendados
+
+- adicionar testes para `Dashboard` e `CardCrypto`;
+- quebrar bundle com code splitting (hoje o build aponta chunk grande);
+- integrar provider de notificacao real (email/push/webhook) para alertas.
