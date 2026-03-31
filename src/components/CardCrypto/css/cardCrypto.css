@@ -1,20 +1,15 @@
 .cardsWrapper {
   display: flex;
-  overflow-x: auto;
+  overflow: visible;
   gap: 10px;
-  padding: 10px;
-  scrollbar-width: none;
-}
-
-.cardsWrapper::-webkit-scrollbar {
-  display: none;
+  padding: 0;
 }
 
 .cardContainer {
   background: linear-gradient(145deg, var(--surface-2), var(--surface-3));
   color: #f8fafc;
-  min-width: 245px;
-  max-width: 245px;
+  min-width: 248px;
+  max-width: 248px;
   padding: 12px;
   border-radius: 12px;
   display: flex;
@@ -22,6 +17,8 @@
   cursor: pointer;
   transition: 0.3s;
   border: 1px solid rgba(148, 163, 184, 0.25);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .cardContainer:hover {
@@ -64,7 +61,19 @@
   background: transparent;
   color: #facc15;
   cursor: pointer;
-  font-size: 1.2rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.starIcon {
+  font-size: 1.35rem;
+  display: inline-block;
+  transition: transform 0.2s ease, text-shadow 0.2s ease;
+}
+
+.favoriteBtn:hover .starIcon {
+  transform: scale(1.14);
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.65);
 }
 
 .favoriteActive {
@@ -157,4 +166,15 @@
   border: 1px solid rgba(56, 189, 248, 0.35);
   border-radius: 8px;
   padding: 6px 8px;
+}
+
+@media screen and (max-width: 768px) {
+  .cardsWrapper {
+    gap: 12px;
+  }
+
+  .cardContainer {
+    min-width: min(86vw, 280px);
+    max-width: min(86vw, 280px);
+  }
 }

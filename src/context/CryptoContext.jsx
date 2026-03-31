@@ -87,10 +87,6 @@ export function CryptoProvider({ children }) {
   }, [cryptoList, selectedCryptoId]);
 
   useEffect(() => {
-    setCompareCryptoIds((current) => current.filter((id) => id !== selectedCryptoId));
-  }, [selectedCryptoId]);
-
-  useEffect(() => {
     localStorage.setItem("cryptograph:favorites", JSON.stringify(favorites));
   }, [favorites]);
 
@@ -151,7 +147,7 @@ export function CryptoProvider({ children }) {
   );
 
   const selectedCoinIds = useMemo(
-    () => [selectedCryptoId, ...compareCryptoIds].filter(Boolean),
+    () => [...new Set([selectedCryptoId, ...compareCryptoIds].filter(Boolean))],
     [selectedCryptoId, compareCryptoIds]
   );
 
@@ -187,14 +183,12 @@ export function CryptoProvider({ children }) {
   };
 
   const toggleCompareCrypto = (coinId) => {
-    if (coinId === selectedCryptoId) return;
-
     setCompareCryptoIds((current) => {
       if (current.includes(coinId)) {
         return current.filter((id) => id !== coinId);
       }
 
-      if (current.length >= 2) {
+      if (current.length >= 3) {
         return [...current.slice(1), coinId];
       }
 

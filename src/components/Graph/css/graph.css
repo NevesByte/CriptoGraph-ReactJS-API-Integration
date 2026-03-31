@@ -35,6 +35,11 @@
   color: #e2e8f0;
 }
 
+.graphHint {
+  color: #93c5fd;
+  font-size: 0.8rem;
+}
+
 .trendBadge {
   display: flex;
   flex-direction: column;
@@ -92,13 +97,62 @@
   font-size: 0.9rem;
 }
 
+.chartViewport {
+  width: 100%;
+  overflow: hidden;
+  padding-bottom: 2px;
+}
+
+.chartFrame {
+  width: 100%;
+  min-height: 340px;
+  touch-action: pan-x pan-y;
+}
+
 @media screen and (max-width: 768px) {
+  #containerGraph {
+    padding: 14px;
+    margin: 0;
+    border-radius: 12px;
+  }
+
   #graphHeader {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
+  }
+
+  #graphHeader h2 {
+    font-size: 1.2rem;
+  }
+
+  #selectedPeriodLabel {
+    font-size: 0.82rem;
+  }
+
+  #metricsRow {
+    gap: 10px;
+    font-size: 0.88rem;
+  }
+
+  .graphHint {
+    width: 100%;
+    font-size: 0.76rem;
   }
 
   .trendBadge {
     align-items: flex-start;
+  }
+
+  .graphTooltip {
+    padding: 6px 8px;
+  }
+
+  .graphTooltipDate {
+    font-size: 0.72rem;
+  }
+
+  .graphTooltipItem {
+    font-size: 0.82rem;
   }
 }

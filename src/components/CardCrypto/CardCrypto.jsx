@@ -64,7 +64,9 @@ function CardCrypto() {
                   }}
                   aria-label={`Favoritar ${crypto.name}`}
                 >
-                  {isFavorite(crypto.id) ? "Favorito" : "Favoritar"}
+                  <span className="starIcon" aria-hidden="true">
+                    {isFavorite(crypto.id) ? "★" : "☆"}
+                  </span>
                 </button>
               </div>
 

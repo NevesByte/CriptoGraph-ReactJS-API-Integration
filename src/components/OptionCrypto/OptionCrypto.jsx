@@ -27,16 +27,27 @@ function OptionCrypto() {
     setShowFavoritesOnly,
   } = useContext(CryptoContext);
 
+  const getCardStep = () => {
+    if (!carrosselRef.current) return 280;
+    const firstCard = carrosselRef.current.querySelector(".cardContainer");
+    if (!firstCard) return 280;
+    const styles = window.getComputedStyle(carrosselRef.current);
+    const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
+    return firstCard.getBoundingClientRect().width + gap;
+  };
+
   const scrollLeft = () => {
     if (!carrosselRef.current) return;
-    const distance = window.innerWidth <= 500 ? 200 : 300;
-    carrosselRef.current.scrollBy({ left: -distance, behavior: "smooth" });
+    const step = getCardStep();
+    const target = Math.max(0, carrosselRef.current.scrollLeft - step);
+    carrosselRef.current.scrollTo({ left: target, behavior: "smooth" });
   };
 
   const scrollRight = () => {
     if (!carrosselRef.current) return;
-    const distance = window.innerWidth <= 500 ? 230 : 300;
-    carrosselRef.current.scrollBy({ left: distance, behavior: "smooth" });
+    const step = getCardStep();
+    const target = carrosselRef.current.scrollLeft + step;
+    carrosselRef.current.scrollTo({ left: target, behavior: "smooth" });
   };
 
   return (
@@ -66,14 +77,21 @@ function OptionCrypto() {
           ))}
         </div>
 
-        <label className="favoriteToggle" htmlFor="watchlist-toggle">
+        <label
+          className="favoriteToggle"
+          htmlFor="watchlist-toggle"
+          aria-label={showFavoritesOnly ? "Exibindo favoritos" : "Exibir apenas favoritos"}
+          title={showFavoritesOnly ? "Exibindo favoritos" : "Exibir apenas favoritos"}
+        >
           <input
             id="watchlist-toggle"
             type="checkbox"
             checked={showFavoritesOnly}
             onChange={(event) => setShowFavoritesOnly(event.target.checked)}
           />
-          Somente favoritos
+          <span className="favoriteToggleStar" aria-hidden="true">
+            {showFavoritesOnly ? "★" : "☆"}
+          </span>
         </label>
       </section>
 

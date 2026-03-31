@@ -50,6 +50,17 @@
   gap: 8px;
   color: var(--text-main);
   font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  background: var(--surface-1);
+  border-radius: 10px;
+  padding: 7px 9px;
+  cursor: pointer;
+}
+
+.favoriteToggleStar {
+  color: #facc15;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 #marketPagination {
@@ -131,9 +142,7 @@
 
 #carrosselCards {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.265);
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
+  display: flex;
   gap: 20px;
   min-height: 160px;
   width: 100%;
@@ -141,6 +150,8 @@
   padding: 15px;
   align-items: stretch;
   scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 15px;
   border-radius: 10px;
 }
 #carrosselCards::-webkit-scrollbar {
@@ -151,6 +162,11 @@
   #periodFilters {
     width: 100%;
     justify-content: space-between;
+  }
+
+  #carrosselCards {
+    padding: 12px;
+    gap: 12px;
   }
 
   #marketPagination {

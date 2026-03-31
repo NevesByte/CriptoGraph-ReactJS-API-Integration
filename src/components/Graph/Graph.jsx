@@ -1,6 +1,7 @@
 import {
   Area,
   AreaChart,
+  Brush,
   CartesianGrid,
   Line,
   ReferenceDot,
@@ -9,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { CryptoContext } from "../../context/CryptoContext";
 import "./css/graph.css";
 
@@ -106,6 +107,18 @@ function Graph() {
     () => compareCryptoIds.map((id) => cryptoList.find((coin) => coin.id === id)).filter(Boolean),
     [compareCryptoIds, cryptoList]
   );
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(max-width: 768px)").matches : false
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    const media = window.matchMedia("(max-width: 768px)");
+    const onChange = (event) => setIsMobile(event.matches);
+    setIsMobile(media.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
 
   const chartData = useMemo(() => {
     if (!selectedCrypto) return [];
@@ -189,6 +202,7 @@ function Graph() {
   if (!selectedCrypto) return <p>Selecione uma criptomoeda</p>;
 
   const primaryDataKey = `price_${selectedCrypto.id}`;
+  const chartHeight = isMobile ? 380 : 320;
 
   return (
     <section id="containerGraph" aria-label="Grafico de mercado">
@@ -210,107 +224,125 @@ function Graph() {
         <p>
           Max Drawdown: <strong>{summary.drawdown.toFixed(2)}%</strong>
         </p>
+        {isMobile && <p className="graphHint">Use o seletor abaixo para dar zoom no periodo</p>}
       </div>
 
       {loadingHistory ? (
         <p>Carregando grafico...</p>
       ) : (
-        <ResponsiveContainer width="100%" height={320}>
-          <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 2 }}>
-            <defs>
-              <linearGradient id="priceAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={summary.areaTopColor} stopOpacity={1} />
-                <stop offset="95%" stopColor={summary.areaBottomColor} stopOpacity={1} />
-              </linearGradient>
-              <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
+        <div className="chartViewport">
+          <div className="chartFrame">
+            <ResponsiveContainer width="100%" height={chartHeight}>
+              <AreaChart data={chartData} margin={{ top: 10, right: isMobile ? 10 : 16, left: 0, bottom: 2 }}>
+                <defs>
+                  <linearGradient id="priceAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={summary.areaTopColor} stopOpacity={1} />
+                    <stop offset="95%" stopColor={summary.areaBottomColor} stopOpacity={1} />
+                  </linearGradient>
+                  <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                    <feMerge>
+                      <feMergeNode in="coloredBlur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
 
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.25)" />
-            <XAxis
-              dataKey="time"
-              minTickGap={16}
-              tick={{ fill: "#cbd5e1", fontSize: 12 }}
-              axisLine={{ stroke: "rgba(148,163,184,0.3)" }}
-              tickLine={{ stroke: "rgba(148,163,184,0.3)" }}
-            />
-            <YAxis
-              width={90}
-              tickFormatter={(value) => usdFormatter.format(value)}
-              tick={{ fill: "#cbd5e1", fontSize: 12 }}
-              axisLine={{ stroke: "rgba(148,163,184,0.3)" }}
-              tickLine={{ stroke: "rgba(148,163,184,0.3)" }}
-            />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#e2e8f0", strokeDasharray: "4 4" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.25)" />
+                <XAxis
+                  dataKey="time"
+                  minTickGap={isMobile ? 30 : 16}
+                  tick={{ fill: "#cbd5e1", fontSize: isMobile ? 11 : 12 }}
+                  axisLine={{ stroke: "rgba(148,163,184,0.3)" }}
+                  tickLine={{ stroke: "rgba(148,163,184,0.3)" }}
+                />
+                <YAxis
+                  hide={isMobile}
+                  width={90}
+                  tickFormatter={(value) => usdFormatter.format(value)}
+                  tick={{ fill: "#cbd5e1", fontSize: 12 }}
+                  axisLine={{ stroke: "rgba(148,163,184,0.3)" }}
+                  tickLine={{ stroke: "rgba(148,163,184,0.3)" }}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#e2e8f0", strokeDasharray: "4 4" }} />
 
-            <Area
-              type="monotone"
-              dataKey={primaryDataKey}
-              name={selectedCrypto.symbol.toUpperCase()}
-              stroke="none"
-              fill="url(#priceAreaGradient)"
-              isAnimationActive
-              animationDuration={900}
-            />
-            <Line
-              type="monotone"
-              dataKey={primaryDataKey}
-              name={selectedCrypto.symbol.toUpperCase()}
-              stroke={summary.lineColor}
-              strokeWidth={3}
-              dot={false}
-              filter="url(#lineGlow)"
-              isAnimationActive
-              animationDuration={900}
-            />
+                <Area
+                  type="monotone"
+                  dataKey={primaryDataKey}
+                  name={selectedCrypto.symbol.toUpperCase()}
+                  stroke="none"
+                  fill="url(#priceAreaGradient)"
+                  isAnimationActive
+                  animationDuration={900}
+                />
+                <Line
+                  type="monotone"
+                  dataKey={primaryDataKey}
+                  name={selectedCrypto.symbol.toUpperCase()}
+                  stroke={summary.lineColor}
+                  strokeWidth={isMobile ? 3.5 : 3}
+                  dot={false}
+                  activeDot={{ r: isMobile ? 5 : 4 }}
+                  filter="url(#lineGlow)"
+                  isAnimationActive
+                  animationDuration={900}
+                />
 
-            {compareCoins.map((coin, index) => (
-              <Line
-                key={coin.id}
-                type="monotone"
-                dataKey={`price_${coin.id}`}
-                name={coin.symbol.toUpperCase()}
-                stroke={comparePalette[index % comparePalette.length]}
-                strokeWidth={2}
-                dot={false}
-                strokeDasharray="6 4"
-              />
-            ))}
+                {compareCoins.map((coin, index) => (
+                  <Line
+                    key={coin.id}
+                    type="monotone"
+                    dataKey={`price_${coin.id}`}
+                    name={coin.symbol.toUpperCase()}
+                    stroke={comparePalette[index % comparePalette.length]}
+                    strokeWidth={isMobile ? 2.4 : 2}
+                    dot={false}
+                    strokeDasharray="6 4"
+                  />
+                ))}
 
-            <Line
-              type="monotone"
-              dataKey="ma7"
-              name="MM 7"
-              stroke="#eab308"
-              strokeWidth={1.5}
-              dot={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="ma21"
-              name="MM 21"
-              stroke="#a855f7"
-              strokeWidth={1.5}
-              dot={false}
-            />
+                <Line
+                  type="monotone"
+                  dataKey="ma7"
+                  name="MM 7"
+                  stroke="#eab308"
+                  strokeWidth={isMobile ? 1.8 : 1.5}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="ma21"
+                  name="MM 21"
+                  stroke="#a855f7"
+                  strokeWidth={isMobile ? 1.8 : 1.5}
+                  dot={false}
+                />
 
-            {summary.lastPoint && (
-              <ReferenceDot
-                x={summary.lastPoint.time}
-                y={summary.lastPoint[primaryDataKey]}
-                r={5}
-                fill={summary.lineColor}
-                stroke="#ffffff"
-                strokeWidth={2}
-              />
-            )}
-          </AreaChart>
-        </ResponsiveContainer>
+                {summary.lastPoint && (
+                  <ReferenceDot
+                    x={summary.lastPoint.time}
+                    y={summary.lastPoint[primaryDataKey]}
+                    r={isMobile ? 6 : 5}
+                    fill={summary.lineColor}
+                    stroke="#ffffff"
+                    strokeWidth={2}
+                  />
+                )}
+
+                {isMobile && chartData.length > 20 && (
+                  <Brush
+                    dataKey="time"
+                    height={24}
+                    stroke="#93c5fd"
+                    travellerWidth={10}
+                    startIndex={Math.max(0, chartData.length - 20)}
+                    endIndex={chartData.length - 1}
+                  />
+                )}
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       )}
     </section>
   );
