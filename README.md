@@ -1,6 +1,7 @@
 ﻿# CriptoGraph
 
 Aplicacao web para monitoramento de criptomoedas com foco em experiencia de uso, performance de consultas e qualidade de engenharia frontend.
+Acesse: https://vercel.com/nevesbytes-projects
 
 ## Resumo
 
@@ -117,19 +118,3 @@ npm run dev
 ```
 
 Aplicacao local: `http://localhost:5173`
-
-## Evolucao Recomendada
-
-- mover base URL da API para `VITE_API_BASE_URL`;
-- adicionar tratamento visual de erro por componente;
-- adicionar testes para `Graph` e `InfoCrypto`;
-- incluir filtros adicionais (rank, market cap, variacao).
-
-## Impressao Tecnica para Recrutador
-
-O CriptoGraph demonstra dominio de frontend moderno com foco em:
-
-- arquitetura clara de estado;
-- performance (debounce + cache);
-- qualidade de entrega (testes e CI);
-- capacidade de evoluir de MVP para produto com padrao profissional.
