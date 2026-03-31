@@ -12,6 +12,9 @@ describe("OptionCrypto", () => {
     const user = userEvent.setup();
     const setSearchTerm = vi.fn();
     const setSelectedPeriod = vi.fn();
+    const setPage = vi.fn();
+    const setPerPage = vi.fn();
+    const setShowFavoritesOnly = vi.fn();
 
     render(
       <CryptoContext.Provider
@@ -20,6 +23,14 @@ describe("OptionCrypto", () => {
           setSearchTerm,
           selectedPeriod: "7",
           setSelectedPeriod,
+          page: 1,
+          setPage,
+          perPage: 10,
+          setPerPage,
+          hasNextPage: true,
+          hasPreviousPage: false,
+          showFavoritesOnly: false,
+          setShowFavoritesOnly,
         }}
       >
         <OptionCrypto />

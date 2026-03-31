@@ -1,12 +1,52 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { VitePWA } from "vite-plugin-pwa";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["logo.webp"],
+      manifest: {
+        name: "CriptoGraph",
+        short_name: "CriptoGraph",
+        description: "Dashboard de monitoramento de criptomoedas",
+        theme_color: "#0f172a",
+        background_color: "#0f172a",
+        display: "standalone",
+        start_url: "/",
+        icons: [
+          {
+            src: "/logo.webp",
+            sizes: "192x192",
+            type: "image/webp",
+          },
+          {
+            src: "/logo.webp",
+            sizes: "512x512",
+            type: "image/webp",
+          },
+        ],
+      },
+    }),
+  ],
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: './src/test/setupTests.js',
+    setupFiles: "./src/test/setupTests.js",
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      reportsDirectory: "./coverage",
+      thresholds: {
+        lines: 80,
+        branches: 70,
+        functions: 80,
+        statements: 80,
+      },
+    },
   },
-})
+});
+
+

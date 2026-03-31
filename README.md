@@ -1,4 +1,4 @@
-﻿# CriptoGraph
+# CriptoGraph
 
 Aplicacao web para monitoramento de criptomoedas com foco em experiencia de uso, performance de consultas e qualidade de engenharia frontend.
 Acesse: https://vercel.com/nevesbytes-projects
