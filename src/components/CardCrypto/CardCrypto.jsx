@@ -83,10 +83,14 @@ function CardCrypto() {
                 <strong>{crypto.price_change_percentage_24h.toFixed(2)}%</strong>
               </div>
 
-              <label className="compareToggle">
+              <label
+                className="compareToggle"
+                onClick={(event) => event.stopPropagation()}
+              >
                 <input
                   type="checkbox"
                   checked={isCompared}
+                  onClick={(event) => event.stopPropagation()}
                   onChange={(event) => {
                     event.stopPropagation();
                     toggleCompareCrypto(crypto.id);
@@ -112,19 +116,31 @@ function CardCrypto() {
                 />
                 <button
                   type="button"
+                  className="saveAlertBtn"
                   onClick={() => {
                     if (!alertValue) return;
                     setAlertTarget(crypto.id, alertValue);
                   }}
+                  disabled={!alertValue}
                 >
                   Salvar
                 </button>
                 {alertTargets[crypto.id] && (
-                  <button type="button" onClick={() => removeAlertTarget(crypto.id)}>
+                  <button
+                    type="button"
+                    className="removeAlertBtn"
+                    onClick={() => removeAlertTarget(crypto.id)}
+                  >
                     Remover
                   </button>
                 )}
               </div>
+
+              {alertTargets[crypto.id] && (
+                <p className="savedTargetTag">
+                  Alvo salvo: ${Number(alertTargets[crypto.id]).toLocaleString()}
+                </p>
+              )}
             </section>
           </article>
         );

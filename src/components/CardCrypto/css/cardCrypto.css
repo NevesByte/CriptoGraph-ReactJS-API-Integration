@@ -76,16 +76,33 @@
   gap: 8px;
   align-items: center;
   font-size: 0.85rem;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(148, 163, 184, 0.14);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.compareToggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #22c55e;
+  cursor: pointer;
 }
 
 .alertRow {
   display: flex;
   gap: 6px;
   align-items: center;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.32);
+  border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
 .alertRow input {
-  width: 82px;
+  flex: 1;
+  min-width: 88px;
   border: 1px solid rgba(148, 163, 184, 0.45);
   background: rgba(15, 23, 42, 0.25);
   color: #f8fafc;
@@ -100,9 +117,44 @@
   border-radius: 6px;
   padding: 6px 8px;
   font-size: 0.72rem;
+  font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alertRow button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.saveAlertBtn {
+  border-color: rgba(34, 197, 94, 0.65);
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.removeAlertBtn {
+  border-color: rgba(239, 68, 68, 0.65);
+  background: rgba(239, 68, 68, 0.18);
 }
 
 .alertRow button:hover {
-  background: rgba(59, 130, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+.saveAlertBtn:hover {
+  background: rgba(34, 197, 94, 0.32);
+}
+
+.removeAlertBtn:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.savedTargetTag {
+  margin: 2px 0 0;
+  font-size: 0.76rem;
+  color: #bae6fd;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 8px;
+  padding: 6px 8px;
 }
