@@ -5,27 +5,6 @@ Dashboard de mercado cripto com foco em experiencia de produto, performance e en
 ![Coverage](https://img.shields.io/badge/coverage-61.8%25-yellow)
 ![CI](https://img.shields.io/badge/CI-lint%20%7C%20coverage%20%7C%20build-blue)
 
-## O que foi implementado
-
-Este projeto agora inclui todas as evolucoes pedidas:
-
-- alertas de preco por ativo;
-- favoritos/watchlist com persistencia em `localStorage`;
-- comparacao de ate 3 moedas no mesmo grafico;
-- metricas avancadas no grafico:
-  - media movel 7;
-  - media movel 21;
-  - volatilidade;
-  - max drawdown;
-- tema claro/escuro com persistencia;
-- paginacao server-side (`page` + `per_page`);
-- camada de dados com `React Query`;
-- tratamento robusto de erro com `retry` na UI;
-- melhorias de acessibilidade (labels, foco visivel, teclas de selecao, aria);
-- PWA instalavel (manifest + service worker);
-- testes com `Vitest + React Testing Library`;
-- cobertura de testes com gate de qualidade na CI.
-
 ## Stack Tecnica
 
 - `React 19`
@@ -166,9 +145,3 @@ App local: `http://localhost:5173`
 - `src/pages/dashbord/`
 - `.github/workflows/ci.yml`
 - `vite.config.js`
-
-## Proximos passos recomendados
-
-- adicionar testes para `Dashboard` e `CardCrypto`;
-- quebrar bundle com code splitting (hoje o build aponta chunk grande);
-- integrar provider de notificacao real (email/push/webhook) para alertas.
