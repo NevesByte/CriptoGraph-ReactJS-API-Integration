@@ -1,3 +1,50 @@
+#cryptoFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 10px 0;
+}
+
+#searchCryptoInput {
+  flex: 1;
+  min-width: 220px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+#searchCryptoInput:focus {
+  border-color: #3b82f6;
+}
+
+#periodFilters {
+  display: flex;
+  gap: 8px;
+}
+
+.periodButton {
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.periodButton:hover {
+  background-color: #f3f4f6;
+}
+
+.activePeriod {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
 #containerCarrosslCards {
   display: flex;
   align-items: center;
@@ -54,4 +101,11 @@
 }
 #carrosselCards::-webkit-scrollbar {
   display: none;
+}
+
+@media screen and (max-width: 768px) {
+  #periodFilters {
+    width: 100%;
+    justify-content: space-between;
+  }
 }

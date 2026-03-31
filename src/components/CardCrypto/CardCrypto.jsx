@@ -3,15 +3,22 @@ import { CryptoContext } from "../../context/CryptoContext";
 import "./css/cardCrypto.css";
 
 function CardCrypto() {
-  const { cryptoList, setSelectedCrypto, selectedCrypto } = useContext(CryptoContext);
+  const { filteredCryptoList, setSelectedCrypto, selectedCrypto, searchTerm } =
+    useContext(CryptoContext);
 
-  if (!cryptoList || cryptoList.length === 0) {
-    return <p>Carregando criptos...</p>;
+  if (!filteredCryptoList || filteredCryptoList.length === 0) {
+    return (
+      <p>
+        {searchTerm
+          ? "Nenhuma criptomoeda encontrada para essa busca."
+          : "Carregando criptomoedas..."}
+      </p>
+    );
   }
 
   return (
     <div className="cardsWrapper">
-      {cryptoList.map((crypto) => (
+      {filteredCryptoList.map((crypto) => (
         <div
           key={crypto.id}
           className={`cardContainer ${

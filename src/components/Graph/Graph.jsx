@@ -1,16 +1,17 @@
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+﻿import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useContext, useMemo } from "react";
 import { CryptoContext } from "../../context/CryptoContext";
 import "./css/graph.css";
 
 function Graph() {
-  const { cryptoHistory, selectedCrypto, loading } = useContext(CryptoContext);
+  const { cryptoHistory, selectedCrypto, loadingHistory, selectedPeriod } =
+    useContext(CryptoContext);
 
   const data = useMemo(() => {
     if (!cryptoHistory) return [];
     return cryptoHistory.map(([timestamp, price]) => ({
       time: new Date(timestamp).toLocaleDateString("pt-BR"),
-      price: price,
+      price,
     }));
   }, [cryptoHistory]);
 
@@ -19,8 +20,9 @@ function Graph() {
   return (
     <div id="containerGraph">
       <h2>{selectedCrypto.name}</h2>
-      {loading ? (
-        <p>Carregando gráfico...</p>
+      <p id="selectedPeriodLabel">Periodo: {selectedPeriod} dias</p>
+      {loadingHistory ? (
+        <p>Carregando grafico...</p>
       ) : (
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={data}>
