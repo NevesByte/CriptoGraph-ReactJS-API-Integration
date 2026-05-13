@@ -23,7 +23,6 @@ A aplicação permite:
 - consumir API externa;
 - trabalhar renderização dinâmica no React.
 
-Projeto desenvolvido em estrutura simples, estilo estágio/júnior.
 
 ---
 
