@@ -1,174 +1,823 @@
 ﻿# CriptoGraph
 
-Dashboard de mercado cripto com foco em experiencia de produto, performance e engenharia frontend profissional.
+Dashboard simples de criptomoedas desenvolvido com React, focado em aprendizado de frontend, consumo de API e gerenciamento de estado global.
 
-![Coverage](https://img.shields.io/badge/coverage-61.8%25-yellow)
-![CI](https://img.shields.io/badge/CI-lint%20%7C%20coverage%20%7C%20build-blue)
+![React](https://img.shields.io/badge/React-19-blue)
+![Vite](https://img.shields.io/badge/Vite-7-purple)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-green)
 
-## O que foi implementado
+---
 
-Este projeto agora inclui todas as evolucoes pedidas:
+# Objetivo do Projeto
 
-- alertas de preco por ativo;
-- favoritos/watchlist com persistencia em `localStorage`;
-- comparacao de ate 3 moedas no mesmo grafico;
-- metricas avancadas no grafico:
-  - media movel 7;
-  - media movel 21;
-  - volatilidade;
-  - max drawdown;
-- tema claro/escuro com persistencia;
-- paginacao server-side (`page` + `per_page`);
-- camada de dados com `React Query`;
-- tratamento robusto de erro com `retry` na UI;
-- melhorias de acessibilidade (labels, foco visivel, teclas de selecao, aria);
-- PWA instalavel (manifest + service worker);
-- testes com `Vitest + React Testing Library`;
-- cobertura de testes com gate de qualidade na CI.
+O objetivo do projeto é praticar conceitos importantes de React através de uma aplicação de mercado cripto.
 
-## Stack Tecnica
+A aplicação permite:
 
-- `React 19`
-- `Vite 7`
-- `@tanstack/react-query`
+- listar criptomoedas;
+- pesquisar moedas;
+- selecionar moedas;
+- visualizar informações detalhadas;
+- visualizar gráfico;
+- praticar Context API;
+- consumir API externa;
+- trabalhar renderização dinâmica no React.
+
+Projeto desenvolvido em estrutura simples, estilo estágio/júnior.
+
+---
+
+# Stack Tecnológica
+
+- `React`
+- `Vite`
+- `Context API`
 - `Recharts`
-- `Vitest` + `React Testing Library`
-- `@vitest/coverage-v8`
-- `ESLint 9`
-- `vite-plugin-pwa`
-- `GitHub Actions`
+- `CSS`
 
-## Funcionalidades de Produto
+---
 
-### Mercado e navegacao
+# Funcionalidades
 
-- busca por nome/simbolo com debounce;
-- filtro de periodo (`24h`, `7d`, `30d`, `1y`);
-- paginação de resultados com controle de itens por pagina;
-- filtro de somente favoritos.
+## Mercado Cripto
 
-### Watchlist e alertas
+- listagem de criptomoedas;
+- busca por nome;
+- cards interativos;
+- seleção de moeda;
+- atualização automática da interface.
 
-- favoritar/desfavoritar moedas;
-- definir alvo de preco por ativo;
-- painel de alertas acionados com dismiss;
-- contador de alertas no header.
+## Gráfico
 
-### Grafico analitico
+- gráfico com `Recharts`;
+- atualização automática ao clicar em uma moeda;
+- gráfico responsivo;
+- tooltip;
+- area chart.
 
-- grafico realista com area + glow + tooltip customizada;
-- linha principal da moeda selecionada;
-- linhas comparativas de outras moedas;
-- medias moveis 7 e 21;
-- indicador de tendencia (alta/queda);
-- volatilidade e max drawdown exibidos na UI.
+## Informações da Moeda
 
-## Arquitetura
+- nome;
+- símbolo;
+- preço;
+- market cap;
+- variação 24h.
 
-### Estado global e dados
+---
 
-`CryptoContext` centraliza estado de dominio e interacao com queries:
-
-- selecao de ativo e periodo;
-- favoritos e comparacoes;
-- paginacao;
-- alertas;
-- tema;
-- estado de loading/erro/retry.
-
-`React Query` gerencia:
-
-- cache em memoria de mercado e historicos;
-- stale time e retries;
-- deduplicacao de requests;
-- refetch controlado.
-
-## Endpoints Consumidos (CoinGecko)
-
-Base URL: `https://api.coingecko.com`
-
-- Lista de ativos:
-  - `GET /api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&sparkline=false&per_page={perPage}&page={page}`
-- Historico por ativo:
-  - `GET /api/v3/coins/{id}/market_chart?vs_currency=usd&days={period}`
-
-## PWA
-
-Configurado com `vite-plugin-pwa`:
-
-- `manifest.webmanifest` gerado no build;
-- `service worker` gerado automaticamente;
-- app instalavel em navegadores compatíveis.
-
-## Testes e Cobertura
-
-Suites atuais:
-
-- `CryptoContext.test.jsx`
-- `OptionCrypto.test.jsx`
-- `Graph.test.jsx`
-- `InfoCrypto.test.jsx`
-
-Comando de cobertura:
+# Estrutura do Projeto
 
 ```bash
-npm run test:coverage
+src/
+│
+├── components/
+│   ├── CardCrypto/
+│   ├── Graph/
+│   ├── Header/
+│   ├── InfoCrypto/
+│   └── OptionCrypto/
+│
+├── context/
+│   └── CryptoContext.jsx
+│
+├── pages/
+│   └── dashboard/
+│
+├── App.jsx
+└── main.jsx
 ```
 
-Thresholds globais (gate de qualidade):
+---
 
-- `lines >= 60`
-- `statements >= 60`
-- `branches >= 55`
-- `functions >= 40`
+# Fluxo da Aplicação
 
-## CI
+```text
+Aplicação inicia
+↓
+CryptoProvider envolve App
+↓
+useEffect busca API
+↓
+Dados são salvos no Context
+↓
+Cards renderizam moedas
+↓
+Usuário seleciona uma moeda
+↓
+Graph e InfoCrypto atualizam automaticamente
+```
 
-Pipeline em `.github/workflows/ci.yml` executa em `push` e `pull_request`:
+---
 
-1. `npm ci`
-2. `npm run lint`
-3. `npm run test:coverage`
-4. `npm run build`
-5. upload do artefato de cobertura
+# Explicação Técnica Completa
 
-## Scripts
+---
+
+# main.jsx
+
+Arquivo responsável por iniciar a aplicação React.
+
+```jsx
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <CryptoProvider>
+    <App />
+  </CryptoProvider>
+);
+```
+
+## O que acontece aqui
+
+O React renderiza o componente principal da aplicação:
+
+```jsx
+<App />
+```
+
+Mas antes disso, ele é envolvido pelo:
+
+```jsx
+<CryptoProvider>
+```
+
+Isso significa que todos os componentes da aplicação terão acesso ao contexto global.
+
+---
+
+# App.jsx
+
+Componente principal da aplicação.
+
+Responsável apenas por renderizar a página principal:
+
+```jsx
+<Dashboard />
+```
+
+---
+
+# Dashboard.jsx
+
+Página principal da aplicação.
+
+Responsável por organizar os componentes da tela.
+
+Estrutura:
+
+```jsx
+<Header />
+<OptionCrypto />
+<Graph />
+<InfoCrypto />
+```
+
+## Componentes renderizados
+
+### Header
+
+Cabeçalho da aplicação.
+
+### OptionCrypto
+
+Busca e cards das moedas.
+
+### Graph
+
+Gráfico da moeda selecionada.
+
+### InfoCrypto
+
+Informações detalhadas da moeda.
+
+---
+
+# CryptoContext.jsx
+
+Arquivo mais importante do projeto.
+
+Responsável por:
+
+- buscar API;
+- armazenar estados globais;
+- compartilhar dados entre componentes.
+
+---
+
+# createContext
+
+```jsx
+export const CryptoContext = createContext();
+```
+
+Cria um contexto global no React.
+
+Esse contexto poderá ser acessado por qualquer componente da aplicação.
+
+---
+
+# CryptoProvider
+
+```jsx
+export function CryptoProvider({ children })
+```
+
+Esse componente envolve toda aplicação.
+
+Tudo que estiver dentro dele terá acesso aos estados globais.
+
+---
+
+# useState
+
+O projeto utiliza vários estados.
+
+---
+
+## Lista de criptomoedas
+
+```jsx
+const [cryptoList, setCryptoList] = useState([]);
+```
+
+Armazena todas as moedas vindas da API.
+
+---
+
+## Loading
+
+```jsx
+const [loading, setLoading] = useState(false);
+```
+
+Controla carregamento da aplicação.
+
+---
+
+## Error
+
+```jsx
+const [error, setError] = useState(null);
+```
+
+Controla erros da API.
+
+---
+
+## Busca
+
+```jsx
+const [searchTerm, setSearchTerm] = useState("");
+```
+
+Armazena o valor digitado no input.
+
+---
+
+## Moeda selecionada
+
+```jsx
+const [selectedCrypto, setSelectedCrypto] = useState(null);
+```
+
+Armazena a moeda clicada pelo usuário.
+
+---
+
+# useEffect
+
+Responsável pela busca da API.
+
+```jsx
+useEffect(() => {
+  async function fetchCryptos() {
+
+  }
+
+  fetchCryptos();
+}, []);
+```
+
+---
+
+# Por que usar useEffect?
+
+Porque buscar API é um efeito colateral.
+
+Fluxo:
+
+```text
+React renderiza
+↓
+useEffect executa
+↓
+API é buscada
+↓
+Estado atualiza
+↓
+Tela renderiza novamente
+```
+
+---
+
+# fetch API
+
+Busca os dados da CoinGecko.
+
+```jsx
+const response = await fetch(API_URL);
+```
+
+---
+
+# response.json()
+
+Converte a resposta para JSON.
+
+```jsx
+const data = await response.json();
+```
+
+---
+
+# Salvando os dados
+
+```jsx
+setCryptoList(data);
+```
+
+Agora os dados ficam disponíveis para toda aplicação.
+
+---
+
+# Context.Provider
+
+```jsx
+<CryptoContext.Provider
+  value={{
+    cryptoList,
+    selectedCrypto,
+    setSelectedCrypto,
+    searchTerm,
+    setSearchTerm,
+    loading,
+    error,
+  }}
+>
+```
+
+Tudo que estiver dentro de `value` poderá ser acessado pelos componentes.
+
+---
+
+# useContext
+
+Os componentes acessam o contexto usando:
+
+```jsx
+const { cryptoList } = useContext(CryptoContext);
+```
+
+Isso evita passar props manualmente entre vários componentes.
+
+---
+
+# Header.jsx
+
+Componente responsável pelo topo da aplicação.
+
+Exibe:
+
+- nome do sistema;
+- cabeçalho visual.
+
+Componente simples e estático.
+
+---
+
+# OptionCrypto.jsx
+
+Responsável por:
+
+- input de busca;
+- renderização dos cards.
+
+---
+
+# Input Controlado
+
+```jsx
+<input
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
+```
+
+---
+
+# Como funciona
+
+Fluxo:
+
+```text
+Usuário digita
+↓
+onChange dispara
+↓
+setSearchTerm atualiza estado
+↓
+React renderiza novamente
+```
+
+---
+
+# Filtro das moedas
+
+```jsx
+const filteredCryptoList = cryptoList.filter((coin) =>
+  coin.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+```
+
+---
+
+# Como o filter funciona
+
+O React percorre o array inteiro.
+
+Se o nome da moeda incluir o texto digitado:
+
+```jsx
+includes()
+```
+
+ela aparece na tela.
+
+---
+
+# CardCrypto.jsx
+
+Responsável pelos cards das criptomoedas.
+
+---
+
+# map()
+
+```jsx
+filteredCryptoList.map((crypto) => (
+```
+
+Percorre o array de moedas.
+
+Para cada moeda:
+
+- cria um card;
+- renderiza informações.
+
+---
+
+# key
+
+```jsx
+key={crypto.id}
+```
+
+Ajuda o React identificar elementos únicos dentro de listas.
+
+Muito importante para performance.
+
+---
+
+# Seleção da moeda
+
+```jsx
+onClick={() => setSelectedCrypto(crypto)}
+```
+
+Quando o usuário clica:
+
+- a moeda é salva no contexto;
+- outros componentes atualizam automaticamente.
+
+---
+
+# Atualização automática do React
+
+Quando:
+
+```jsx
+setSelectedCrypto()
+```
+
+executa:
+
+```text
+Estado muda
+↓
+React renderiza novamente
+↓
+Graph atualiza
+↓
+InfoCrypto atualiza
+```
+
+---
+
+# Classe dinâmica
+
+```jsx
+className={`cardContainer ${
+  selectedCrypto?.id === crypto.id
+    ? "activeCard"
+    : ""
+}`}
+```
+
+Se a moeda atual for a selecionada:
+
+```jsx
+activeCard
+```
+
+é adicionada automaticamente.
+
+---
+
+# Optional Chaining
+
+```jsx
+selectedCrypto?.id
+```
+
+Evita erro caso:
+
+```jsx
+selectedCrypto === null
+```
+
+---
+
+# Graph.jsx
+
+Responsável pelo gráfico da aplicação.
+
+Biblioteca utilizada:
 
 ```bash
-npm run dev
-npm run lint
-npm run test
-npm run test:watch
-npm run test:coverage
-npm run build
-npm run preview
-npm run quality
+Recharts
 ```
 
-## Executar localmente
+---
+
+# Estrutura do gráfico
+
+```jsx
+<ResponsiveContainer>
+  <AreaChart>
+```
+
+---
+
+# ResponsiveContainer
+
+Faz o gráfico ocupar automaticamente o tamanho disponível.
+
+---
+
+# AreaChart
+
+Componente principal do gráfico.
+
+---
+
+# Dados do gráfico
+
+```jsx
+const chartData = [
+  { date: "Seg", price: 20 },
+];
+```
+
+Array de objetos usado para renderizar o gráfico.
+
+---
+
+# XAxis
+
+```jsx
+<XAxis dataKey="date" />
+```
+
+Eixo horizontal.
+
+---
+
+# YAxis
+
+```jsx
+<YAxis />
+```
+
+Eixo vertical.
+
+---
+
+# Tooltip
+
+```jsx
+<Tooltip />
+```
+
+Mostra informações ao passar o mouse.
+
+---
+
+# Area
+
+```jsx
+<Area
+  dataKey="price"
+/>
+```
+
+Linha/área principal do gráfico.
+
+---
+
+# Atualização dinâmica do gráfico
+
+Quando:
+
+```jsx
+selectedCrypto
+```
+
+muda:
+
+```text
+Graph renderiza novamente
+↓
+Título muda
+↓
+Dados mudam
+↓
+Gráfico muda
+```
+
+---
+
+# InfoCrypto.jsx
+
+Responsável pelas informações detalhadas da moeda.
+
+---
+
+# Renderização Condicional
+
+```jsx
+if (!selectedCrypto)
+```
+
+Se nenhuma moeda estiver selecionada:
+
+```jsx
+Selecione uma criptomoeda
+```
+
+é exibido na tela.
+
+---
+
+# Informações renderizadas
+
+```jsx
+selectedCrypto.name
+selectedCrypto.symbol
+selectedCrypto.current_price
+selectedCrypto.market_cap
+selectedCrypto.price_change_percentage_24h
+```
+
+---
+
+# Renderização dinâmica no React
+
+Sempre que o estado muda:
+
+```text
+React executa componente novamente
+↓
+JSX é reconstruído
+↓
+Tela atualiza
+```
+
+---
+
+# Hooks utilizados no projeto
+
+- `useState`
+- `useEffect`
+- `useContext`
+
+---
+
+# Conceitos React utilizados
+
+- componentização;
+- estados;
+- contexto global;
+- renderização condicional;
+- listas com map;
+- eventos;
+- consumo de API;
+- renderização dinâmica.
+
+---
+
+# API Consumida
+
+API utilizada:
+
+```text
+https://api.coingecko.com/api/v3/coins/markets
+```
+
+---
+
+# Dados utilizados da API
+
+```jsx
+crypto.id
+crypto.name
+crypto.symbol
+crypto.current_price
+crypto.market_cap
+crypto.price_change_percentage_24h
+```
+
+---
+
+# Executar Localmente
 
 ```bash
 npm install
 npm run dev
 ```
 
-App local: `http://localhost:5173`
+Aplicação:
 
-## Estrutura relevante
+```text
+http://localhost:5173
+```
+
+---
+
+# Estrutura relevante
 
 - `src/context/CryptoContext.jsx`
-- `src/hooks/useDebouncedValue.js`
 - `src/components/OptionCrypto/`
 - `src/components/CardCrypto/`
 - `src/components/Graph/`
 - `src/components/InfoCrypto/`
 - `src/components/Header/`
-- `src/pages/dashbord/`
-- `.github/workflows/ci.yml`
-- `vite.config.js`
+- `src/pages/dashboard/`
 
-## Proximos passos recomendados
+---
 
-- adicionar testes para `Dashboard` e `CardCrypto`;
-- quebrar bundle com code splitting (hoje o build aponta chunk grande);
-- integrar provider de notificacao real (email/push/webhook) para alertas.
+# Conceitos aprendidos no projeto
+
+## React
+
+- hooks;
+- contexto;
+- estados;
+- renderização;
+- componentes.
+
+## JavaScript
+
+- async/await;
+- fetch;
+- arrays;
+- map;
+- filter;
+- objetos.
+
+## Frontend
+
+- consumo de API;
+- gerenciamento de estado;
+- UI dinâmica;
+- arquitetura React.
+
+---
+
+# Melhorias Futuras
+
+- paginação;
+- favoritos;
+- dark mode;
+- integração com API histórica real;
+- React Query;
+- testes;
+- TypeScript;
+- deploy.

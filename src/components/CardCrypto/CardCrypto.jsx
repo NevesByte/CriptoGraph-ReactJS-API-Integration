@@ -1,29 +1,21 @@
-﻿import { useContext, useState } from "react";
+﻿import { useContext } from "react";
 import { CryptoContext } from "../../context/CryptoContext";
 import "./css/cardCrypto.css";
 
 function CardCrypto() {
   const {
     filteredCryptoList,
-    setSelectedCrypto,
     selectedCrypto,
+    setSelectedCrypto,
     searchTerm,
-    toggleFavorite,
-    isFavorite,
-    compareCryptoIds,
-    toggleCompareCrypto,
-    alertTargets,
-    setAlertTarget,
-    removeAlertTarget,
   } = useContext(CryptoContext);
 
-  const [priceInputs, setPriceInputs] = useState({});
-
-  if (!filteredCryptoList || filteredCryptoList.length === 0) {
+  // Se não tiver criptomoedas
+  if (filteredCryptoList.length === 0) {
     return (
       <p>
         {searchTerm
-          ? "Nenhuma criptomoeda encontrada para essa busca."
+          ? "Nenhuma criptomoeda encontrada."
           : "Carregando criptomoedas..."}
       </p>
     );
@@ -31,122 +23,42 @@ function CardCrypto() {
 
   return (
     <div className="cardsWrapper">
-      {filteredCryptoList.map((crypto) => {
-        const isCompared = compareCryptoIds.includes(crypto.id);
-        const alertValue =
-          priceInputs[crypto.id] ??
-          (alertTargets[crypto.id] ? String(alertTargets[crypto.id]) : "");
+      {filteredCryptoList.map((crypto) => (
+        <article
+          key={crypto.id}
+          className={`cardContainer ${
+            selectedCrypto?.id === crypto.id
+              ? "activeCard"
+              : ""
+          }`}
+          onClick={() => setSelectedCrypto(crypto)}
+        >
+          <section className="infoContainer">
+            {/* Nome */}
+            <div className="nome">
+              {crypto.name}
+            </div>
 
-        return (
-          <article
-            key={crypto.id}
-            className={`cardContainer ${selectedCrypto?.id === crypto.id ? "activeCard" : ""}`}
-            role="button"
-            tabIndex={0}
-            onClick={() => setSelectedCrypto(crypto.id)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                setSelectedCrypto(crypto.id);
-              }
-            }}
-            aria-label={`Selecionar ${crypto.name}`}
-          >
-            <section className="infoContainer">
-              <div className="cardTopRow">
-                <div className="nome">{crypto.name}</div>
-                <button
-                  type="button"
-                  className={`favoriteBtn ${isFavorite(crypto.id) ? "favoriteActive" : ""}`}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    toggleFavorite(crypto.id);
-                  }}
-                  aria-label={`Favoritar ${crypto.name}`}
-                >
-                  <span className="starIcon" aria-hidden="true">
-                    {isFavorite(crypto.id) ? "★" : "☆"}
-                  </span>
-                </button>
-              </div>
+            {/* Símbolo */}
+            <div className="symbol">
+              {crypto.symbol.toUpperCase()}
+            </div>
 
-              <div className="symbol">{crypto.symbol.toUpperCase()}</div>
+            {/* Preço */}
+            <div className="priceTag">
+              ${crypto.current_price.toLocaleString()}
+            </div>
 
-              <div className="priceTag">${crypto.current_price.toLocaleString()}</div>
-              <div
-                className="variacao"
-                style={{
-                  color:
-                    crypto.price_change_percentage_24h > 0
-                      ? "var(--success)"
-                      : "var(--danger)",
-                }}
-              >
-                <strong>{crypto.price_change_percentage_24h.toFixed(2)}%</strong>
-              </div>
-
-              <label
-                className="compareToggle"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <input
-                  type="checkbox"
-                  checked={isCompared}
-                  onClick={(event) => event.stopPropagation()}
-                  onChange={(event) => {
-                    event.stopPropagation();
-                    toggleCompareCrypto(crypto.id);
-                  }}
-                />
-                Comparar
-              </label>
-
-              <div className="alertRow" onClick={(event) => event.stopPropagation()}>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={alertValue}
-                  placeholder="Alvo $"
-                  onChange={(event) =>
-                    setPriceInputs((current) => ({
-                      ...current,
-                      [crypto.id]: event.target.value,
-                    }))
-                  }
-                  aria-label={`Alvo de preco para ${crypto.name}`}
-                />
-                <button
-                  type="button"
-                  className="saveAlertBtn"
-                  onClick={() => {
-                    if (!alertValue) return;
-                    setAlertTarget(crypto.id, alertValue);
-                  }}
-                  disabled={!alertValue}
-                >
-                  Salvar
-                </button>
-                {alertTargets[crypto.id] && (
-                  <button
-                    type="button"
-                    className="removeAlertBtn"
-                    onClick={() => removeAlertTarget(crypto.id)}
-                  >
-                    Remover
-                  </button>
-                )}
-              </div>
-
-              {alertTargets[crypto.id] && (
-                <p className="savedTargetTag">
-                  Alvo salvo: ${Number(alertTargets[crypto.id]).toLocaleString()}
-                </p>
-              )}
-            </section>
-          </article>
-        );
-      })}
+            {/* Variação */}
+            <div className="variacao">
+              {crypto.price_change_percentage_24h
+                ? crypto.price_change_percentage_24h.toFixed(2)
+                : "0.00"}
+              %
+            </div>
+          </section>
+        </article>
+      ))}
     </div>
   );
 }

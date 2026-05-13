@@ -1,180 +1,76 @@
 .cardsWrapper {
   display: flex;
-  overflow: visible;
-  gap: 10px;
-  padding: 0;
+  gap: 15px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding: 10px;
+
+  scroll-behavior: smooth;
+}
+
+.cardsWrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.cardsWrapper::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 10px;
 }
 
 .cardContainer {
-  background: linear-gradient(145deg, var(--surface-2), var(--surface-3));
-  color: #f8fafc;
-  min-width: 248px;
-  max-width: 248px;
-  padding: 12px;
-  border-radius: 12px;
-  display: flex;
-  align-items: stretch;
+  background: #1e293b;
+  color: white;
+
+  min-width: 250px;
+  max-width: 250px;
+
+  padding: 15px;
+  border-radius: 10px;
+
   cursor: pointer;
-  transition: 0.3s;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+
+  transition: 0.2s;
+
+  flex-shrink: 0;
 }
 
 .cardContainer:hover {
-  transform: translateY(-2px);
+  transform: scale(1.02);
 }
 
 .activeCard {
-  border: 2px solid var(--accent);
+  border: 2px solid #3b82f6;
 }
 
 .infoContainer {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.cardTopRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 10px;
 }
 
 .nome {
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .symbol {
   color: #cbd5e1;
-  font-size: 0.82rem;
 }
 
 .priceTag {
-  font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.favoriteBtn {
-  border: none;
-  background: transparent;
-  color: #facc15;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
-.starIcon {
-  font-size: 1.35rem;
-  display: inline-block;
-  transition: transform 0.2s ease, text-shadow 0.2s ease;
-}
-
-.favoriteBtn:hover .starIcon {
-  transform: scale(1.14);
-  text-shadow: 0 0 10px rgba(250, 204, 21, 0.65);
-}
-
-.favoriteActive {
-  text-shadow: 0 0 8px rgba(250, 204, 21, 0.7);
-}
-
-.compareToggle {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  font-size: 0.85rem;
-  width: fit-content;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: rgba(148, 163, 184, 0.14);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-}
-
-.compareToggle input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: #22c55e;
-  cursor: pointer;
-}
-
-.alertRow {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  padding: 8px;
-  border-radius: 10px;
-  background: rgba(15, 23, 42, 0.32);
-  border: 1px solid rgba(148, 163, 184, 0.3);
-}
-
-.alertRow input {
-  flex: 1;
-  min-width: 88px;
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  background: rgba(15, 23, 42, 0.25);
-  color: #f8fafc;
-  border-radius: 6px;
-  padding: 6px 8px;
-}
-
-.alertRow button {
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  background: rgba(30, 41, 59, 0.55);
-  color: #f8fafc;
-  border-radius: 6px;
-  padding: 6px 8px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.alertRow button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.saveAlertBtn {
-  border-color: rgba(34, 197, 94, 0.65);
-  background: rgba(34, 197, 94, 0.2);
-}
-
-.removeAlertBtn {
-  border-color: rgba(239, 68, 68, 0.65);
-  background: rgba(239, 68, 68, 0.18);
-}
-
-.alertRow button:hover {
-  transform: translateY(-1px);
-}
-
-.saveAlertBtn:hover {
-  background: rgba(34, 197, 94, 0.32);
-}
-
-.removeAlertBtn:hover {
-  background: rgba(239, 68, 68, 0.3);
-}
-
-.savedTargetTag {
-  margin: 2px 0 0;
-  font-size: 0.76rem;
-  color: #bae6fd;
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  border-radius: 8px;
-  padding: 6px 8px;
+.variacao {
+  font-weight: bold;
 }
 
 @media screen and (max-width: 768px) {
-  .cardsWrapper {
-    gap: 12px;
-  }
-
   .cardContainer {
-    min-width: min(86vw, 280px);
-    max-width: min(86vw, 280px);
+    min-width: 220px;
+    max-width: 220px;
   }
 }
